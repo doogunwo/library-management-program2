@@ -143,12 +143,31 @@ public class Main_Frame extends JFrame {
 		menuBar.add(Service);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("\uB300\uC5EC/\uBC18\uB0A9");
+		
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		
+		
 		Service.add(mntmNewMenuItem_2);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("\uB3C4\uC11C\uAD00\uB9AC");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
 		Service.add(mntmNewMenuItem_3);
 		
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("\uD68C\uC6D0\uAD00\uB9AC");
+		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		
 		Service.add(mntmNewMenuItem_4);
 		
 		JPanel panel_9 = new JPanel();
