@@ -19,16 +19,16 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.SystemColor;
 
-public class book extends JFrame {
+public class book_form extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField ISBN_TF;
+	private JTextField title_TF;
+	private JTextField Autior_TF;
+	private JTextField Price_TF;
+	private JTextField Rent_Tf;
+	private JTextField Pub_TF;
 
 	/**
 	 * Launch the application.
@@ -37,7 +37,7 @@ public class book extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					book frame = new book();
+					book_form frame = new book_form();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +49,7 @@ public class book extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public book() {
+	public book_form() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1080, 830);
 		contentPane = new JPanel();
@@ -58,7 +58,7 @@ public class book extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 31, 676, 750);
+		panel.setBounds(0, 31, 706, 750);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -122,65 +122,71 @@ public class book extends JFrame {
 		lblNewLabel_3.setBounds(12, 112, 57, 15);
 		panel.add(lblNewLabel_3);
 		
-		JButton btnNewButton_4 = new JButton("\uB4F1\uB85D");
-		btnNewButton_4.setBounds(12, 174, 97, 23);
-		panel.add(btnNewButton_4);
+		JButton IN_Button = new JButton("\uB4F1\uB85D");
+		IN_Button.setBounds(12, 174, 97, 23);
+		panel.add(IN_Button);
 		
-		JButton btnNewButton_5 = new JButton("\uC0AD\uC81C");
-		btnNewButton_5.setBounds(12, 207, 97, 23);
-		panel.add(btnNewButton_5);
+		JButton out_Button = new JButton("\uC0AD\uC81C");
+		out_Button.setBounds(12, 207, 97, 23);
+		panel.add(out_Button);
 		
 		JLabel lblNewLabel_4 = new JLabel("\uB300\uCD9C \uC5EC\uBD80");
 		lblNewLabel_4.setBounds(12, 137, 57, 15);
 		panel.add(lblNewLabel_4);
 		
-		textField = new JTextField();
-		textField.setBounds(81, 7, 116, 21);
-		panel.add(textField);
-		textField.setColumns(10);
+		ISBN_TF = new JTextField();
+		ISBN_TF.setBounds(81, 7, 116, 21);
+		panel.add(ISBN_TF);
+		ISBN_TF.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(81, 32, 116, 21);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		title_TF = new JTextField();
+		title_TF.setBounds(81, 32, 116, 21);
+		panel.add(title_TF);
+		title_TF.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(81, 59, 116, 21);
-		panel.add(textField_2);
-		textField_2.setColumns(10);
+		Autior_TF = new JTextField();
+		Autior_TF.setBounds(81, 59, 116, 21);
+		panel.add(Autior_TF);
+		Autior_TF.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(81, 109, 116, 21);
-		panel.add(textField_3);
-		textField_3.setColumns(10);
+		Price_TF = new JTextField();
+		Price_TF.setBounds(81, 109, 116, 21);
+		panel.add(Price_TF);
+		Price_TF.setColumns(10);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(81, 134, 116, 21);
-		panel.add(textField_4);
-		textField_4.setColumns(10);
+		Rent_Tf = new JTextField();
+		Rent_Tf.setBounds(81, 134, 116, 21);
+		panel.add(Rent_Tf);
+		Rent_Tf.setColumns(10);
 		
 		JLabel lblNewLabel_5 = new JLabel("\uB3C4\uC11C\uBAA9\uB85D");
 		lblNewLabel_5.setBounds(23, 293, 57, 15);
 		panel.add(lblNewLabel_5);
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.setBackground(Color.WHITE);
-		panel_4.setBounds(307, 10, 163, 186);
-		panel.add(panel_4);
-		panel_4.setLayout(null);
+		JPanel man = new JPanel();
+		man.setBackground(Color.WHITE);
+		man.setBounds(307, 10, 163, 186);
+		panel.add(man);
+		man.setLayout(null);
 		
-		JButton btnNewButton_3 = new JButton("\uC0AC\uC9C4 \uB4F1\uB85D");
-		btnNewButton_3.setBounds(330, 207, 97, 23);
-		panel.add(btnNewButton_3);
+		JButton Upload_Button = new JButton("\uC0AC\uC9C4 \uB4F1\uB85D");
+		Upload_Button.setBounds(330, 207, 97, 23);
+		panel.add(Upload_Button);
 		
 		JButton btnNewButton_6 = new JButton("\uC911\uBCF5\uCCB4\uD06C");
+		
+		btnNewButton_6.addActionListener(new ActionListener() {//ISBN 중복체크 버튼
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
 		btnNewButton_6.setBounds(197, 6, 97, 23);
 		panel.add(btnNewButton_6);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(81, 84, 116, 21);
-		panel.add(textField_5);
+		Pub_TF = new JTextField();
+		Pub_TF.setColumns(10);
+		Pub_TF.setBounds(81, 84, 116, 21);
+		panel.add(Pub_TF);
 		
 		JLabel lblNewLabel_3_1 = new JLabel("\uCD9C\uD310\uC0AC");
 		lblNewLabel_3_1.setBounds(12, 87, 57, 15);

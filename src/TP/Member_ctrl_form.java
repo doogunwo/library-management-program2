@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
@@ -56,16 +57,18 @@ import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.border.LineBorder;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 
-public class Main extends JFrame {
+public class Member_ctrl_form extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField USER_NAME;
+	private JTextField USER_BIRTH;
+	private JTextField USER_PHONE_NUMBER;
+	private JTextField USER_MAIL;
 	private final Action action = new SwingAction();
 	private JTable table;
 
@@ -76,7 +79,7 @@ public class Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main frame = new Main();
+					Member_ctrl_form frame = new Member_ctrl_form();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -88,7 +91,7 @@ public class Main extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Main() {
+	public Member_ctrl_form() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 988, 967);
 		contentPane = new JPanel();
@@ -102,13 +105,20 @@ public class Main extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JButton btnNewButton_6 = new JButton("\uD68C\uC6D0\uBAA9\uB85D");
-		btnNewButton_6.setBounds(358, 0, 97, 23);
-		panel.add(btnNewButton_6);
-		
-		JButton btnNewButton = new JButton("\uD68C\uC6D0\uAD00\uB9AC");
-		btnNewButton.setBounds(0, 0, 97, 23);
-		panel.add(btnNewButton);
+		JButton selectMemberManagementButton = new JButton("회원관리");	//회원관리
+		selectMemberManagementButton.setBounds(0, 0, 97, 23);
+		panel.add(selectMemberManagementButton);
+
+		//"회원목록" 버튼을 누를시 USER_TABLE의 값을 모두 가져와 JTABLE에 출력
+		JButton membershipListButton = new JButton("회원목록");	//회원목록
+		membershipListButton.setBounds(358, 0, 97, 23);
+		panel.add(membershipListButton);
+		membershipListButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,"태이블표를 새로 고침함","Message",JOptionPane.ERROR_MESSAGE);
+			}
+		});
+
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(5, 28, 943, 870);
@@ -126,58 +136,87 @@ public class Main extends JFrame {
 		panel_3.add(panel_5);
 		panel_5.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("\uC774\uB984");
-		lblNewLabel.setBounds(25, 10, 24, 15);
-		panel_5.add(lblNewLabel);
+		JLabel labelName = new JLabel("이름");
+		labelName.setBounds(25, 10, 41, 15);
+		panel_5.add(labelName);
 		
-		textField = new JTextField();
-		textField.setBounds(78, 7, 116, 21);
-		panel_5.add(textField);
-		textField.setColumns(10);
+		//회원 이름을 입력할 텍스트 필드
+		USER_NAME = new JTextField();
+		USER_NAME.setBounds(78, 7, 116, 21);
+		panel_5.add(USER_NAME);
+		USER_NAME.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("\uC5F0\uB77D\uCC98");
-		lblNewLabel_1.setBounds(25, 60, 36, 15);
-		panel_5.add(lblNewLabel_1);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(78, 57, 226, 21);
-		panel_5.add(textField_1);
-		textField_1.setColumns(20);
+		JLabel labelBirth = new JLabel("생년월일");
+		labelBirth.setBounds(16, 35, 57, 15);
+		panel_5.add(labelBirth);
 		
-		JLabel lblNewLabel_2 = new JLabel("\uC0DD\uB144\uC6D4\uC77C");
-		lblNewLabel_2.setBounds(25, 35, 48, 15);
-		panel_5.add(lblNewLabel_2);
+		//회원의 생년월일을 입력할 텍스트 필드
+		USER_BIRTH = new JTextField();
+		USER_BIRTH.setBounds(78, 57, 226, 21);
+		panel_5.add(USER_BIRTH);
+		USER_BIRTH.setColumns(20);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(78, 32, 116, 21);
-		panel_5.add(textField_2);
-		textField_2.setColumns(10);
+		JLabel labelPhoneNumber = new JLabel("연락처");
+		labelPhoneNumber.setBounds(25, 60, 41, 15);
+		panel_5.add(labelPhoneNumber);
+	
+		//회원의 휴대전화를 입력할 텍스트 필드
+		USER_PHONE_NUMBER = new JTextField();
+		USER_PHONE_NUMBER.setBounds(78, 32, 116, 21);
+		panel_5.add(USER_PHONE_NUMBER);
+		USER_PHONE_NUMBER.setColumns(10);
 		
-		JLabel lblNewLabel_3 = new JLabel("\uC774\uBA54\uC77C");
-		lblNewLabel_3.setBounds(25, 85, 36, 15);
-		panel_5.add(lblNewLabel_3);
+		JLabel labelMail = new JLabel("이메일");
+		labelMail.setBounds(25, 85, 41, 15);
+		panel_5.add(labelMail);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(78, 82, 226, 21);
-		panel_5.add(textField_3);
-		textField_3.setColumns(20);
+		//회원의 이메일를 입력할 텍스트 필드
+		USER_MAIL = new JTextField();
+		USER_MAIL.setBounds(78, 82, 226, 21);
+		panel_5.add(USER_MAIL);
+		USER_MAIL.setColumns(20);
 		
-		JButton btnNewButton_5 = new JButton("\uD68C\uC6D0\uB4F1\uB85D");
-		btnNewButton_5.setBounds(16, 193, 97, 23);
-		panel_5.add(btnNewButton_5);
+		//이름을 입력하고 "회원검색" 버튼을 누르면 생년월일,연락처,이메일을 각각 USER_BIRTH, USER_PHONE_NUMBER, USER_MAIL에 출력
+		JButton memberSearchButton = new JButton("회원검색");	//회원 검색
+		memberSearchButton.setBounds(206, 6, 97, 23);
+		panel_5.add(memberSearchButton);
+		memberSearchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,"이름을 입력하고 버튼을 누르면 생년/연락/이메일 각각의 텍스트필드에 정보가 나옴","Message",JOptionPane.ERROR_MESSAGE);
+				System.out.println("회원 검색");
+			}
+		});
+		// 텍스트 필드에 값을 입력하고 "회윈등록" 버튼을 누르면 이름, 생년월일, 연락처, 이메일, 등록일을 USER_TABLE에 데이터를 삽입
+		JButton membershipRegistrationButton = new JButton("회원등록");	//회원등록
+		membershipRegistrationButton.setBounds(16, 171, 97, 23);
+		panel_5.add(membershipRegistrationButton);
+		membershipRegistrationButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,"이름/생년/연락/이메일을 입력하고 버튼을 누르면 등록일을 포함하여 USER_TABLE에 데이터를 삽입","Message",JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		
-		JButton btnNewButton_8 = new JButton("\uD68C\uC6D0\uC0AD\uC81C");
-		btnNewButton_8.setBounds(125, 193, 97, 23);
-		panel_5.add(btnNewButton_8);
+		//수정할 필드의 행을 어떻게 추적할지 모르겠음
+		JButton membershipModificationButton = new JButton("회원수정");	//회원 수정
+		membershipModificationButton.setBounds(16, 204, 97, 23);
+		panel_5.add(membershipModificationButton);
+		membershipModificationButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,"모든 테이블 필드에 값이 있을때 수정할 값을 수성하고 버튼을 클릭하면 수정된 값으로 DB에 저장","Message",JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		
-		JButton btnNewButton_7 = new JButton("\uD68C\uC6D0\uC218\uC815");
-		btnNewButton_7.setBounds(125, 226, 97, 23);
-		panel_5.add(btnNewButton_7);
-		
-		JButton btnNewButton_1 = new JButton("\uD68C\uC6D0\uAC80\uC0C9");
-		btnNewButton_1.setBounds(16, 226, 97, 23);
-		panel_5.add(btnNewButton_1);
-		
+		//테이블의 행을 어떻게 추적해서 수정할건지 모르겠음
+		JButton deleteMembershipButton = new JButton("회원삭제");	//회원 삭제
+		deleteMembershipButton.setBounds(16, 237, 97, 23);
+		panel_5.add(deleteMembershipButton);
+		deleteMembershipButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,"USER_BOOL의 값을 0(false)로 변환","Message",JOptionPane.ERROR_MESSAGE);
+			}
+		});
+
 		JLabel lblNewLabel_6 = new JLabel("");
 		lblNewLabel_6.setBounds(16, 108, 57, 15);
 		panel_5.add(lblNewLabel_6);
@@ -191,6 +230,7 @@ public class Main extends JFrame {
 		scrollPane.setBounds(340, 10, 591, 824);
 		panel_1.add(scrollPane);
 		
+		//USER_TABLE의 값을 DB에서 가져와 출력
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
