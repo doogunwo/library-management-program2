@@ -22,7 +22,6 @@ import java.awt.SystemColor;
 public class book_form extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
 	private JTextField ISBN_TF;
 	private JTextField title_TF;
 	private JTextField Autior_TF;
@@ -50,15 +49,16 @@ public class book_form extends JFrame {
 	 * Create the frame.
 	 */
 	public book_form() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1080, 830);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 726, 628);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 31, 706, 750);
+		panel.setBackground(Color.WHITE);
+		panel.setBounds(0, 31, 706, 534);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -74,59 +74,25 @@ public class book_form extends JFrame {
 		lblNewLabel_2.setBounds(12, 62, 57, 15);
 		panel.add(lblNewLabel_2);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 319, 652, 421);
-		panel.add(scrollPane);
-		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-			},
-			new String[] {
-				"ISBN", "\uC81C\uBAA9", "\uC800\uC790", "\uCD9C\uD310\uC0AC", "\uAC00\uACA9", "\uB300\uCD9C\uC5EC\uBD80"
-			}
-		));
-		scrollPane.setViewportView(table);
-		
 		JLabel lblNewLabel_3 = new JLabel("\uAC00\uACA9");
 		lblNewLabel_3.setBounds(12, 112, 57, 15);
 		panel.add(lblNewLabel_3);
 		
 		JButton IN_Button = new JButton("\uB4F1\uB85D");
+		IN_Button.setBackground(SystemColor.activeCaption);
+		IN_Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		IN_Button.setBounds(12, 174, 97, 23);
 		panel.add(IN_Button);
 		
 		JButton out_Button = new JButton("\uC0AD\uC81C");
+		out_Button.setBackground(SystemColor.activeCaption);
+		out_Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		out_Button.setBounds(12, 207, 97, 23);
 		panel.add(out_Button);
 		
@@ -159,21 +125,23 @@ public class book_form extends JFrame {
 		panel.add(Rent_Tf);
 		Rent_Tf.setColumns(10);
 		
-		JLabel lblNewLabel_5 = new JLabel("\uB3C4\uC11C\uBAA9\uB85D");
-		lblNewLabel_5.setBounds(23, 293, 57, 15);
-		panel.add(lblNewLabel_5);
-		
 		JPanel man = new JPanel();
-		man.setBackground(Color.WHITE);
+		man.setBackground(SystemColor.activeCaption);
 		man.setBounds(307, 10, 163, 186);
 		panel.add(man);
 		man.setLayout(null);
 		
 		JButton Upload_Button = new JButton("\uC0AC\uC9C4 \uB4F1\uB85D");
+		Upload_Button.setBackground(SystemColor.activeCaption);
+		Upload_Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		Upload_Button.setBounds(330, 207, 97, 23);
 		panel.add(Upload_Button);
 		
 		JButton btnNewButton_6 = new JButton("\uC911\uBCF5\uCCB4\uD06C");
+		btnNewButton_6.setBackground(SystemColor.activeCaption);
 		
 		btnNewButton_6.addActionListener(new ActionListener() {//ISBN 중복체크 버튼
 			public void actionPerformed(ActionEvent e) {
@@ -191,6 +159,11 @@ public class book_form extends JFrame {
 		JLabel lblNewLabel_3_1 = new JLabel("\uCD9C\uD310\uC0AC");
 		lblNewLabel_3_1.setBounds(12, 87, 57, 15);
 		panel.add(lblNewLabel_3_1);
+		
+		JButton membershipListButton = new JButton("\uB3C4\uC11C\uD604\uD669\uBCF4\uAE30");
+		membershipListButton.setBackground(SystemColor.activeCaption);
+		membershipListButton.setBounds(12, 313, 154, 23);
+		panel.add(membershipListButton);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.activeCaption);
@@ -218,6 +191,7 @@ public class book_form extends JFrame {
 		panel_3.setLayout(null);
 		
 		JButton btnNewButton_2 = new JButton("\uB3C4\uC11C\uAD00\uB9AC");
+		btnNewButton_2.setBackground(SystemColor.activeCaption);
 		btnNewButton_2.setBounds(0, 10, 97, 23);
 		panel_3.add(btnNewButton_2);
 	}
