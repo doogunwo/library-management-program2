@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class dbConnector {
-
+	//Ä¿¹Ô¿ë »¹±Û
 	Connection conn; // java.sql.Connection
 	Statement stmt = null;
 
@@ -53,6 +53,21 @@ public class dbConnector {
 			return null;
 		}
 
+	}
+	
+	public int executeUpdate(String str) {
+		// TODO Auto-generated method stub
+		int src;
+		try {
+			src = stmt.executeUpdate(str);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			System.out.println("SQL ½ÇÇà ¿¡·¯");
+			return 0;
+		}
+		
+		return src;
 	}
 
 }
