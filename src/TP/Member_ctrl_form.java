@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.JTextPane;
@@ -80,7 +82,6 @@ import comm.dbConnector;
 import Status.Member_Status;
 
 public class Member_ctrl_form extends JFrame {
-	//커밋용 엌ㅋㅋ
 	private JPanel contentPane;
 	private JTextField USER_NAME;
 	private JTextField USER_BIRTH;
@@ -89,6 +90,7 @@ public class Member_ctrl_form extends JFrame {
 	private final Action action = new SwingAction();
 	dbConnector dbConn = new dbConnector();
 	private String filePath;
+
 	/**
 	 * Launch the application.
 	 */
@@ -173,16 +175,13 @@ public class Member_ctrl_form extends JFrame {
 		USER_MAIL.setBounds(78, 87, 217, 21);
 		panel_5.add(USER_MAIL);
 		USER_MAIL.setColumns(20);
-		
-		//회원 이미지
+
+		// 회원 이미지
 		JFileChooser memberImg = new JFileChooser();
 		FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("All Images", "jpg", "jpge", "png", "gif",
 				"svg");
 		memberImg.setFileFilter(fileFilter);
-		
-		
-		
-		
+
 		// 이름을 입력하고 "회원검색" 버튼을 누르면 생년월일,연락처,이메일을 각각 USER_BIRTH, USER_PHONE_NUMBER,
 		// USER_MAIL에 출력
 		JButton memberSearchButton = new JButton("회원검색"); // 회원 검색
@@ -249,7 +248,7 @@ public class Member_ctrl_form extends JFrame {
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}catch (FileNotFoundException e1) {
+				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -273,23 +272,28 @@ public class Member_ctrl_form extends JFrame {
 					JOptionPane.showMessageDialog(null, "이름을 입력하세요!", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
 					if (!USER_PHONE_NUMBER.getText().equals("")) {
-
 						String str = "update USER_TABLE SET USER_PHONE_NUMBER = '" + USER_PHONE_NUMBER.getText()
 								+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "' ;";
 						// System.out.println(str);
 						int src = dbConn.executeUpdate(str);
-					} else if (!USER_BIRTH.getText().equals("")) {
+					}
+					if (!USER_BIRTH.getText().equals("")) {
 						String str = "update USER_TABLE SET USER_BIRTH = '" + USER_BIRTH.getText()
 								+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "' ;";
 						// System.out.println(str);
 						int src = dbConn.executeUpdate(str);
-					} else if (!USER_MAIL.getText().equals("")) {
+					}
+					if (!USER_MAIL.getText().equals("")) {
 						String str = "update USER_TABLE SET USER_MAIL = '" + USER_MAIL.getText()
 								+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "';";
 						// System.out.println(str);
 						int src = dbConn.executeUpdate(str);
 					}
 				}
+				USER_NAME.setText("");
+				USER_PHONE_NUMBER.setText("");
+				USER_BIRTH.setText("");
+				USER_MAIL.setText("");
 			}
 		});
 
@@ -316,7 +320,7 @@ public class Member_ctrl_form extends JFrame {
 		lblNewLabel_6.setBounds(16, 108, 57, 15);
 		panel_5.add(lblNewLabel_6);
 
-		JLabel lblNewLabel = new JLabel("사진");
+		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setForeground(Color.BLACK);
 		lblNewLabel.setBackground(SystemColor.activeCaption);
 		lblNewLabel.setBounds(354, 10, 166, 200);
@@ -346,6 +350,8 @@ public class Member_ctrl_form extends JFrame {
 				int ret = memberImg.showOpenDialog(null);
 				filePath = memberImg.getSelectedFile().getPath();
 				JOptionPane.showMessageDialog(null, filePath, "당신이 선택된 파일은", JOptionPane.NO_OPTION);
+				ImageIcon icon = new ImageIcon(filePath);
+				lblNewLabel.setIcon(icon);
 			}
 		});
 
