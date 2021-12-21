@@ -25,30 +25,22 @@ public class Member_Status extends JFrame {
 		JTable table;
 		DefaultTableModel tableModel;
 
-		Object[][] data = new Object[0][8]; // 일단 빈 row 값 삽입, 이때 두번째 인덱스 값 9은 9개의 열이 존제한다는 뜻으로 선언
-		String[] columnNames = { "휴대전화", "이름", "생년월일", "메일", "이미지", "가입날짜", "가입여부", "대여권수" };
+		Object[][] data = new Object[0][7]; // 일단 빈 row 값 삽입, 이때 두번째 인덱스 값 9은 9개의 열이 존제한다는 뜻으로 선언
+		String[] columnNames = { "휴대전화", "이름", "생년월일", "메일", "이미지", "가입날짜", "대여권수"};
 
 		tableModel = new DefaultTableModel(data, columnNames);
 		table = new JTable(tableModel);
 		// 이미지 리스트
 		ArrayList<Image> tmpImg = new ArrayList<>();
 		try {
-			ResultSet src = dbConn.executeQurey("select * from USER_TABLE;");
+			ResultSet src = dbConn.executeQurey("select USER_PHONE_NUMBER, USER_NAME, USER_BIRTH, USER_MAIL, USER_IMAGE, USER_REG_DATA, USER_RENT_CNT from USER_TABLE WHERE USER_BOOL = 1;");
 			while (src.next()) {
 
-				// SQL에서 BOOK_PRE 필드 결과값에 따라 맞는 문자열 배정 - 1:보유, 2:미보유
-				String liveState;
-
-				if (src.getInt(7) == 1) {
-					liveState = "가입";
-				} else {
-					liveState = "미가입";
-				}
 
 				// ResultSet같은 경우 Index 1번부터 시작
 
 				Object[] tmp = {src.getString(1), src.getString(2), src.getString(3), src.getString(4), "Click",
-						src.getString(6), liveState, src.getInt(8)};
+						src.getString(6), src.getInt(7)};
 				tableModel.addRow(tmp);
 
 				// DB에서 BLOB 자료형으로 저장된 데이터 그림 데이터로 변환
