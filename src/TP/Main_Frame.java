@@ -107,7 +107,7 @@ public class Main_Frame extends JFrame {
 		contentPane.add(Main_panel);
 		Main_panel.setLayout(null);
 		Search_Filed = new JTextField();
-		Search_Filed.setHorizontalAlignment(SwingConstants.CENTER);
+		Search_Filed.setHorizontalAlignment(SwingConstants.LEFT);
 		Search_Filed.setToolTipText("\uCC45\uC774\uB984\uC744 \uC785\uB825\uD558\uC138\uC694");
 		Search_Filed.setBackground(SystemColor.text);
 		Search_Filed.setBounds(118, 0, 358, 30);
@@ -124,6 +124,12 @@ public class Main_Frame extends JFrame {
 		Search.add(book_img);
 
 		JButton Rental_btn = new JButton("\uB300\uCD9C");
+		Rental_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Rental_Form Rf = new Rental_Form();
+				Rf.setVisible(true);
+			}
+		});
 		Rental_btn.setBackground(SystemColor.activeCaption);
 		Rental_btn.setBounds(34, 303, 163, 40);
 		Search.add(Rental_btn);
@@ -132,20 +138,21 @@ public class Main_Frame extends JFrame {
 
 				try {
 
+					Search.setVisible(true);
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					java.sql.Connection conn = DriverManager
-							.getConnection("jdbc:mysql://jdb.deu.monster:60001/j20203000", "20203000", "!!!!20203000");
-
+					java.sql.Connection conn = DriverManager.getConnection(
+							"jdbc:mysql://jdb.deu.monster:60001/java03_team03", "java03_team03", "980601eh!");
+					System.out.println("DB 연결 완료");
 					Statement stmt = conn.createStatement();
-
+					String str456="'" + Search_Filed.getText() + "'" + ";";
 					String string_Oder = "select BOOK_ISBN,BOOK_TITLE,BOOK_AUTHIR,BOOK_PUB,BOOK_PRICE,BOOK_IMAGE,BOOK_PRE from BOOK_TABLE where BOOK_TITLE="
-							+ Search_Filed.getText();
-
+							+str456;
+				
 					ResultSet rs2 = stmt.executeQuery(string_Oder);
 					while (rs2.next()) {
 						tf_ISBN.setText(rs2.getString("BOOK_ISBN"));
+						
 						tf_Title.setText(rs2.getString("BOOK_TITLE"));
-
 						tf_Authir.setText(rs2.getString("BOOK_AUTHIR"));
 						tf_Pub.setText(rs2.getString("BOOK_PUB"));
 						tf_Price.setText(rs2.getString("BOOK_PRICE"));
@@ -165,13 +172,6 @@ public class Main_Frame extends JFrame {
 
 						}
 
-					}
-					if (tf_Title.getText().equals("")) {
-						JOptionPane.showMessageDialog(null, "책을 찾을수없습니다.", "Message", JOptionPane.ERROR_MESSAGE);
-						Search.setVisible(false);
-						Search_Filed.setText("");
-					} else {
-						Search.setVisible(true);
 					}
 
 				} catch (ClassNotFoundException e1) {
@@ -240,6 +240,17 @@ public class Main_Frame extends JFrame {
 		Hide_button.setBackground(SystemColor.activeCaption);
 		Hide_button.addActionListener(new ActionListener() {// 다시 패널숨김.
 			public void actionPerformed(ActionEvent e) {
+
+				tf_ISBN.setText("");
+				tf_Title.setText("");
+
+				tf_Authir.setText("");
+				tf_Pub.setText("");
+				tf_Price.setText("");
+
+				Rent_tf.setText("");
+				book_img.setIcon(new ImageIcon());
+
 				Search.setVisible(false);
 				Search_Filed.setText("");
 			}
@@ -248,6 +259,12 @@ public class Main_Frame extends JFrame {
 		Search.add(Hide_button);
 
 		JButton Return_btn = new JButton("\uBC18\uB0A9");
+		Return_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Return_Frame rF = new Return_Frame();
+				rF.setVisible(true);
+			}
+		});
 		Return_btn.setBackground(SystemColor.activeCaption);
 		Return_btn.setBounds(213, 303, 163, 40);
 		Search.add(Return_btn);
@@ -311,7 +328,9 @@ public class Main_Frame extends JFrame {
 		});
 		comboBox.setBounds(233, 40, 102, 23);
 		Main_panel.add(comboBox);
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"\uB3C4\uC11C\uD604\uD669", "\uD68C\uC6D0\uD604\uD669", "\uD68C\uC6D0\uAD00\uB9AC", "\uB3C4\uC11C\uAD00\uB9AC", "\uB300\uC5EC\uD604\uD669"}));
+		comboBox.setModel(
+				new DefaultComboBoxModel(new String[] { "\uB3C4\uC11C\uD604\uD669", "\uD68C\uC6D0\uD604\uD669",
+						"\uD68C\uC6D0\uAD00\uB9AC", "\uB3C4\uC11C\uAD00\uB9AC", "\uB300\uC5EC\uD604\uD669" }));
 
 		JLabel lblNewLabel_2 = new JLabel("<-\uC0AC\uC6A9\uAC00\uB2A5\uD55C \uC11C\uBE44\uC2A4");
 		lblNewLabel_2.setBounds(347, 40, 160, 23);
@@ -322,7 +341,7 @@ public class Main_Frame extends JFrame {
 		contentPane.add(lblNewLabel);
 		lblNewLabel.setBackground(SystemColor.activeCaption);
 		lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 30));
-		
+
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.activeCaption);
 		panel.setBounds(12, 10, 820, 22);
