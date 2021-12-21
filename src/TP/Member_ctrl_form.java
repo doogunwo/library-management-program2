@@ -271,24 +271,43 @@ public class Member_ctrl_form extends JFrame {
 				if (USER_NAME.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "이름을 입력하세요!", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
-					if (!USER_PHONE_NUMBER.getText().equals("")) {
-						String str = "update USER_TABLE SET USER_PHONE_NUMBER = '" + USER_PHONE_NUMBER.getText()
-								+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "' ;";
-						// System.out.println(str);
-						int src = dbConn.executeUpdate(str);
+					try {
+						String resultSetSql = "select USER_BOOL from USER_TABLE WHERE USER_NAME = " + "'"
+								+ USER_NAME.getText() + "' ;";
+						ResultSet resultSetSrc = dbConn.executeQurey(resultSetSql);
+						while (resultSetSrc.next()) {
+							if (resultSetSrc.getInt(1) == 1) {
+								if (!USER_PHONE_NUMBER.getText().equals("")) {
+									String str = "update USER_TABLE SET USER_PHONE_NUMBER = '"
+											+ USER_PHONE_NUMBER.getText() + "' WHERE USER_NAME = " + "'"
+											+ USER_NAME.getText() + "' ;";
+									// System.out.println(str);
+									int src = dbConn.executeUpdate(str);
+								}
+								if (!USER_BIRTH.getText().equals("")) {
+									String str = "update USER_TABLE SET USER_BIRTH = '" + USER_BIRTH.getText()
+											+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "' ;";
+									// System.out.println(str);
+									int src = dbConn.executeUpdate(str);
+								}
+								if (!USER_MAIL.getText().equals("")) {
+									String str = "update USER_TABLE SET USER_MAIL = '" + USER_MAIL.getText()
+											+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "';";
+									// System.out.println(str);
+									int src = dbConn.executeUpdate(str);
+								}
+							}
+							else {
+								JOptionPane.showMessageDialog(null, USER_NAME.getText()+"는 회원이 아닙니다.", "Message",JOptionPane.ERROR_MESSAGE);
+								break;
+							}
+						}
+
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-					if (!USER_BIRTH.getText().equals("")) {
-						String str = "update USER_TABLE SET USER_BIRTH = '" + USER_BIRTH.getText()
-								+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "' ;";
-						// System.out.println(str);
-						int src = dbConn.executeUpdate(str);
-					}
-					if (!USER_MAIL.getText().equals("")) {
-						String str = "update USER_TABLE SET USER_MAIL = '" + USER_MAIL.getText()
-								+ "' WHERE USER_NAME = " + "'" + USER_NAME.getText() + "';";
-						// System.out.println(str);
-						int src = dbConn.executeUpdate(str);
-					}
+
 				}
 				USER_NAME.setText("");
 				USER_PHONE_NUMBER.setText("");
@@ -309,8 +328,8 @@ public class Member_ctrl_form extends JFrame {
 				if (USER_NAME.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "이름을 입력하세요!", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
-					String str = "update USER_TABLE SET USER_BOOL = 0 " + " WHERE USER_NAME = " + "'"
-							+ USER_NAME.getText() + "';";
+					String str = "update USER_TABLE SET USER_BOOL = 0 " + " WHERE USER_RENT_CNT = 0 AND USER_NAME = " + "'"
+		                     + USER_NAME.getText() + "';";
 					int src = dbConn.executeUpdate(str);
 				}
 			}
