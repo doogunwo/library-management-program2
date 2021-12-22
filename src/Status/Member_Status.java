@@ -21,9 +21,7 @@ public class Member_Status extends JFrame {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	private JTextField textField_5;
 	private JTextField textField_6;
-	private JTextField rb;
 
 	public Member_Status() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -46,20 +44,13 @@ public class Member_Status extends JFrame {
 
 				// ResultSet같은 경우 Index 1번부터 시작
 
-				Object[] tmp = { src.getString(1), src.getString(2), src.getString(3), src.getString(4), "Click",
+				Object[] tmp = { src.getString(1), src.getString(2), src.getString(3), src.getString(4), "없음",
 						src.getString(6), src.getInt(7) };
 				tableModel.addRow(tmp);
 
-				// DB에서 BLOB 자료형으로 저장된 데이터 그림 데이터로 변환
-				InputStream inputStream = src.getBinaryStream(5);
-				try {
-
-					tmpImg.add(ImageIO.read(inputStream));
-
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				
+			
+				
 
 			}
 		} catch (SQLException e) {
@@ -136,7 +127,7 @@ public class Member_Status extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String rent2 = "select USER_NAME,USER_BIRTH,USER_MAIL,USER_REG_DATA,USER_RENT_CNT FROM USER_TABLE WHERE USER_PHONE_NUMBER = "
 						+ "'" + textField.getText() + "'" + ";";
-				int n;
+				
 				try {
 					ResultSet src = dbConn.executeQurey(rent2);
 
@@ -146,7 +137,7 @@ public class Member_Status extends JFrame {
 						textField_2.setText(src.getString("USER_BIRTH"));
 						textField_3.setText(src.getString("USER_MAIL"));
 						textField_4.setText(src.getString("USER_REG_DATA"));
-						rb.setText(src.getString("USER_RENT_CNT"));
+						
 						// DB에서 BLOB 자료형으로 저장된 데이터 그림 데이터로 변환
 						//
 
@@ -165,7 +156,7 @@ public class Member_Status extends JFrame {
 					ResultSet src = dbConn.executeQurey(rent3);
 					while (src.next()) {
 
-						textField_5.setText(src.getString("BOOK_ISBN"));
+						
 						textField_6.setText(src.getString("BOOK_ISBN"));
 					}
 				} catch (Exception e45) {
@@ -217,20 +208,10 @@ public class Member_Status extends JFrame {
 		dd.setBounds(626, 10, 83, 15);
 		panel.add(dd);
 
-		textField_5 = new JTextField();
-		textField_5.setBounds(626, 99, 116, 21);
-		panel.add(textField_5);
-		textField_5.setColumns(10);
-
 		textField_6 = new JTextField();
 		textField_6.setBounds(626, 52, 116, 21);
 		panel.add(textField_6);
 		textField_6.setColumns(10);
-		
-		rb = new JTextField();
-		rb.setBounds(714, 7, 28, 21);
-		panel.add(rb);
-		rb.setColumns(10);
 		// 화면 표시
 		setSize(800, 600);
 		setLocationRelativeTo(null); // 화면 정중앙 배치
