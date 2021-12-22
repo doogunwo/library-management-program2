@@ -184,6 +184,8 @@ public class Return_Frame extends JFrame {
 								textField_2.setText(src.getString("BOOK_AUTHIR"));
 								textField_3.setText(src.getString("BOOK_PUB"));
 								textField_4.setText(src.getString("BOOK_PRICE"));
+								
+								
 								// DB에서 BLOB 자료형으로 저장된 데이터 그림 데이터로 변환
 								//
 
@@ -223,12 +225,31 @@ public class Return_Frame extends JFrame {
 							number.setText(src.getString("USER_PHONE_NUMBER"));
 							mail.setText(src.getString("USER_MAIL"));
 						}
-					}
+					}//
 					catch (Exception e3) {
 						// TODO: handle exception
 					}
 					
+					/*try {
+						String rent4= "UPDATE `java03_team03`.`BOOK_TABLE` SET `BOOK_PRE` = '1' WHERE (`BOOK_ISBN` = "+"'"+textField.getText()+"'";
 					
+						ResultSet src=dbConn.executeQurey(rent4);
+					
+
+						while(src.next()) {
+							String str8 = "UPDATE BOOK_TABLE SET BOOK_PRE = '1' WHERE ISBN="+"'"+textField.getText()+"'";
+							// System.out.println(str);
+							int src8 = dbConn.executeUpdate(str8);
+						}
+						
+
+
+					}
+					
+					catch (Exception e4) {
+						
+					}
+					*/
 
 				}
 			}
