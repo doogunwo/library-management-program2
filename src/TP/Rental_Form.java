@@ -182,10 +182,16 @@ public class Rental_Form extends JFrame {
 		RENT_2.add(img);
 
 		JLabel cnt = new JLabel("");
+		JLabel aaa = new JLabel(""); 
+
 		cnt.setBounds(301, 332, 57, 15);
 		RENT_2.add(cnt);
 		returnCompleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				String rentsql = "SELECT USER_BOOL FROM USER_TABLE WHERE USER_PHONE_NUMBER = " + "'" + tf.getText()
+						+ "'" + ";"; //유저 부울 값 확인 
+
 				String sql = "insert into RENT_TABLE(BOOK_ISBN,RENT_RETURN,USER_PHONE_NUMBER,RENT_DATE,RENT_RETURN_TIME) values(?,?,?,?,?)";
 				
 				String str2 = "select USER_RENT_CNT FROM USER_TABLE WHERE USER_PHONE_NUMBER= " + "'" + tf2.getText()
@@ -194,6 +200,9 @@ public class Rental_Form extends JFrame {
 				Connection tmpConn = dbConn.getConnection();
 
 				ResultSet src = dbConn.executeQurey(str2);
+
+				ResultSet rentsrc = dbConn.executeQurey(rentsql);
+
 				try {
 					while (src.next()) {
 						cnt.setText(src.getString("USER_RENT_CNT"));
@@ -203,43 +212,53 @@ public class Rental_Form extends JFrame {
 
 				}
 
-				if (cnt.getText().equals("1")) {
-					JOptionPane.showMessageDialog(null, "대출실패", "책은 1권씩만 빌릴수있습니다.", JOptionPane.ERROR_MESSAGE);
-				} else {
-					try {
-						PreparedStatement ps = tmpConn.prepareStatement(sql);
+				try {
+					while (rentsrc.next()) {
+						aaa.setText(src.getString("USER_BOOL"));
+					}
+				} catch (Exception e3) {
 
-						// ps.setString(1, ISBN_TF.getText());
-						ps.setString(1, tf.getText());// isbn
-						ps.setString(2, "0");
-						ps.setString(3, tf2.getText());
-						ps.setString(4, "2020:02:10");
-						ps.setString(5, "2020:02:10");
-						
-						int count = ps.executeUpdate();
-						if (count == 0) {
-							JOptionPane.showMessageDialog(null, "대출실패", "도서대출", JOptionPane.ERROR_MESSAGE);
-						} else {
-							JOptionPane.showMessageDialog(null, "대출되었습니다.", "도서반납", JOptionPane.NO_OPTION);
+				}
+				if (aaa.getText().equals("1")) { // 부울값이 0이 아니면
+
+					if (cnt.getText().equals("1")) {
+						JOptionPane.showMessageDialog(null, "대출실패", "책은 1권씩만 빌릴수있습니다.", JOptionPane.ERROR_MESSAGE);
+					} else {
+						try {
+							PreparedStatement ps = tmpConn.prepareStatement(sql);
+
+							// ps.setString(1, ISBN_TF.getText());
+							ps.setString(1, tf.getText());// isbn
+							ps.setString(2, "0");
+							ps.setString(3, tf2.getText());
+							ps.setString(4, "2020:02:10");
+							ps.setString(5, "2020:02:10");
+
+							int count = ps.executeUpdate();
+							if (count == 0) {
+								JOptionPane.showMessageDialog(null, "대출실패", "도서대출", JOptionPane.ERROR_MESSAGE);
+							} else {
+								JOptionPane.showMessageDialog(null, "대출되었습니다.", "도서반납", JOptionPane.NO_OPTION);
+							}
+
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
 
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					String str3 = "UPDATE BOOK_TABLE SET BOOK_PRE = 0 where BOOK_ISBN = '" + tf.getText()
-					+ "' ;";
-					
-					int src3 = dbConn.executeUpdate(str3);
-					
-					String str4 = "UPDATE USER_TABLE SET USER_RENT_CNT = 1 where USER_PHONE_NUMBER = '" + tf2.getText()
-					+ "' ;";
-					
-					int src4=dbConn.executeUpdate(str4);
-					
-				}
+						String str3 = "UPDATE BOOK_TABLE SET BOOK_PRE = 0 where BOOK_ISBN = '" + tf.getText() + "' ;";
 
+						int src3 = dbConn.executeUpdate(str3);
+
+						String str4 = "UPDATE USER_TABLE SET USER_RENT_CNT = 1 where USER_PHONE_NUMBER = '"
+								+ tf2.getText() + "' ;";
+
+						int src4 = dbConn.executeUpdate(str4);
+
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "삭제된회원", "대출실패", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 	}
