@@ -2,17 +2,25 @@ package TP;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
+import comm.dbConnector;
+import Status.Book_Status;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,8 +46,8 @@ public class book_form extends JFrame {
 	private JTextField title_TF;
 	private JTextField Autior_TF;
 	private JTextField Price_TF;
-	private JTextField Rent_Tf;
 	private JTextField Pub_TF;
+	dbConnector dbConn = new dbConnector();
 
 	/**
 	 * Launch the application.
@@ -60,8 +68,10 @@ public class book_form extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	String filePath;
 
 	public book_form() {
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 726, 628);
 		contentPane = new JPanel();
@@ -95,23 +105,51 @@ public class book_form extends JFrame {
 		IN_Button.setBackground(SystemColor.activeCaption);
 		IN_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				String sql = "insert into BOOK_TABLE(BOOK_ISBN, BOOK_TITLE, BOOK_AUTHIR, BOOK_PUB,BOOK_PRICE,BOOK_IMAGE,BOOK_PRE) values(?,?,?,?,?,?,?)";
+				Connection tmpConn = dbConn.getConnection();
+				try {
+					PreparedStatement ps = tmpConn.prepareStatement(sql);
+
+					ps.setString(1, ISBN_TF.getText());
+					ps.setString(2, title_TF.getText());
+					ps.setString(3, Autior_TF.getText());
+					ps.setString(4, Pub_TF.getText());
+					ps.setString(5, Price_TF.getText());
+
+					File tmpFile = new File(filePath);
+
+					ps.setBinaryStream(6, new FileInputStream(tmpFile), tmpFile.length());
+					ps.setString(7, "1");
+					int count = ps.executeUpdate();
+
+					if (count == 0) {
+						JOptionPane.showMessageDialog(null, "도서 : " + title_TF.getText() + "이(는) 등록에 실패하였습니다.",
+								"신규도서등록", JOptionPane.ERROR_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "도서 : " + title_TF.getText() + "이(는) 등록이 완료되었습니다.",
+								"신규도서등록", JOptionPane.NO_OPTION);
+					}
+
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				ISBN_TF.setText("");
+				title_TF.setText("");
+				Autior_TF.setText("");
+				Pub_TF.setText("");
+				Price_TF.setText("");
+
 			}
-		});
+		}
+
+		);
 		IN_Button.setBounds(12, 174, 97, 23);
 		panel.add(IN_Button);
-
-		JButton out_Button = new JButton("\uC0AD\uC81C");
-		out_Button.setBackground(SystemColor.activeCaption);
-		out_Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		out_Button.setBounds(12, 207, 97, 23);
-		panel.add(out_Button);
-
-		JLabel lblNewLabel_4 = new JLabel("\uB300\uCD9C \uC5EC\uBD80");
-		lblNewLabel_4.setBounds(12, 137, 57, 15);
-		panel.add(lblNewLabel_4);
 
 		ISBN_TF = new JTextField();
 		ISBN_TF.setBounds(81, 7, 116, 21);
@@ -137,15 +175,19 @@ public class book_form extends JFrame {
 		panel.add(Price_TF);
 		Price_TF.setColumns(10);
 
-		Rent_Tf = new JTextField();
-		Rent_Tf.setBounds(81, 134, 116, 21);
-		panel.add(Rent_Tf);
-		Rent_Tf.setColumns(10);
-
+		JFileChooser memberImg = new JFileChooser();
 		JButton Upload_Button = new JButton("\uC0AC\uC9C4 \uB4F1\uB85D");
 		Upload_Button.setBackground(SystemColor.activeCaption);
+
 		Upload_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				int ret = memberImg.showOpenDialog(null);
+				filePath = memberImg.getSelectedFile().getPath();
+				JOptionPane.showMessageDialog(null, filePath, "당신이 선택된 파일은", JOptionPane.NO_OPTION);
+				ImageIcon icon = new ImageIcon(filePath);
+				man.setIcon(icon);
+
 			}
 		});
 		Upload_Button.setBounds(358, 207, 97, 23);
@@ -157,7 +199,7 @@ public class book_form extends JFrame {
 		btnNewButton_6.addActionListener(new ActionListener() {// ISBN 중복체크 버튼
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int cnt=0;
+					int cnt = 0;
 					Connection conn; // java.sql.Connection
 					Statement stmt = null;
 					Class.forName("com.mysql.cj.jdbc.Driver");
@@ -178,8 +220,8 @@ public class book_form extends JFrame {
 						}
 
 					}
-					
-					if(cnt==0) {
+
+					if (cnt == 0) {
 						JOptionPane.showMessageDialog(null, "도서등록이 가능합니다.", "Message", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (ClassNotFoundException e1) {
@@ -204,8 +246,15 @@ public class book_form extends JFrame {
 		panel.add(lblNewLabel_3_1);
 
 		JButton membershipListButton = new JButton("\uB3C4\uC11C\uD604\uD669\uBCF4\uAE30");
+		membershipListButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Book_Status bs= new Book_Status();
+				bs.setVisible(true);
+			}
+		});
 		membershipListButton.setBackground(SystemColor.activeCaption);
-		membershipListButton.setBounds(12, 313, 154, 23);
+		membershipListButton.setBounds(12, 217, 154, 23);
 		panel.add(membershipListButton);
 
 		JPanel panel_1 = new JPanel();
