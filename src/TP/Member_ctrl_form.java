@@ -64,6 +64,10 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -90,6 +94,7 @@ public class Member_ctrl_form extends JFrame {
 	private JTextField ph;
 	private JTextField us;
 	private final Action action = new SwingAction();
+	JLabel secondImg = new JLabel();	//이미지를 옮길 레이블
 
 	private String filePath;
 
@@ -182,12 +187,21 @@ public class Member_ctrl_form extends JFrame {
 		panel_5.add(us);
 		us.setColumns(20);
 
-		JLabel img = new JLabel("");
+		JLabel img = new JLabel(""); // 이미지
 		img.setForeground(Color.BLACK);
 		img.setBackground(SystemColor.activeCaption);
 		img.setBounds(354, 10, 166, 200);
 		panel_5.add(img);
+		ImageIcon icon = new ImageIcon("gray.jpg");
+		img.setIcon(icon);
+		
+		
+
+		
+		
 		panel_5.add(im);
+		
+		
 		JButton dm = new JButton("회원삭제"); // 회원 삭제
 		dm.setBackground(SystemColor.activeCaption);
 		dm.setBounds(12, 166, 97, 23);
@@ -211,27 +225,48 @@ public class Member_ctrl_form extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				dbConnector dbConn = new dbConnector();
-				String str = "select USER_BIRTH,USER_MAIL,USER_PHONE_NUMBER,USER_IMAGE FROM USER_TABLE WHERE USER_NAME = "
+				String str = "select USER_BIRTH,USER_MAIL,USER_PHONE_NUMBER,USER_IMAGE,USER_NAME FROM USER_TABLE WHERE USER_NAME = "
 						+ "'" + un.getText() + "'" + ";";
 				try {
 					ResultSet src = dbConn.executeQurey(str);
 					while (src.next()) {
+						String s = src.getString("USER_NAME");
+
 						ub.setText(src.getString("USER_BIRTH"));
 						ph.setText(src.getString("USER_PHONE_NUMBER"));
 
 						us.setText(src.getString("USER_MAIL"));
+
 						try {
 							InputStream img2 = src.getBinaryStream("USER_IMAGE");
 							img.setIcon(new ImageIcon(ImageIO.read(img2)));
-
+							
+							secondImg = img;
 						} catch (Exception e3) {
 
 						}
 					}
+					src.close();
 
 				} catch (SQLException e2) {
 
 				}
+				//이미지 새창으로 띄우기
+				JFrame showBookImgWindows = new JFrame();
+				showBookImgWindows.add(secondImg);
+				showBookImgWindows.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+						// TODO Auto-generated method stub
+						e.getWindow().dispose(); // 해당 창만 완전 종료함
+					}
+
+				});
+				showBookImgWindows.pack();
+				showBookImgWindows.setLocationRelativeTo(null); // 화면 정중앙 배치
+				showBookImgWindows.setVisible(true);
+				
 				if (ph.getText().equals("")) {
 					im.setVisible(true);
 					dm.setVisible(false);
@@ -239,12 +274,78 @@ public class Member_ctrl_form extends JFrame {
 				} else {
 					im.setVisible(false);
 					dm.setVisible(true);
-					JOptionPane.showMessageDialog(null, "회원입니다. '삭제'가 가능합니다.", "Message", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "회원입니다. '삭제'와 '수정'이 가능합니다.", "Message",
+							JOptionPane.ERROR_MESSAGE);
 				}
+
+				
+
 			}
 		});
 		// 텍스트 필드에 값을 입력하고 "회윈등록" 버튼을 누르면 이름, 생년월일, 연락처, 이메일, 등록일을 USER_TABLE에 데이터를 삽입
+		// 회원 수정
+		JButton dm_1 = new JButton("회원 수정");
+		dm_1.setBackground(SystemColor.activeCaption);
+		dm_1.setBounds(12, 203, 97, 23);
+		panel_5.add(dm_1);
+		dm_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dbConnector dbConn = new dbConnector();
+				if (un.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "이름을 입력하세요!", "Message", JOptionPane.ERROR_MESSAGE);
+				} else {
+					String resultSetSql = "select USER_BOOL from USER_TABLE WHERE USER_NAME = " + "'" + un.getText()
+							+ "' ;";
+					try {
+						ResultSet resultSetSrc = dbConn.executeQurey(resultSetSql);
+						if (resultSetSrc.next()) {
+							if (resultSetSrc.getInt(1) == 1) {
+								if (!ph.getText().equals("")) {
+									String str = "update USER_TABLE SET USER_PHONE_NUMBER = '" + ph.getText()
+											+ "' WHERE USER_NAME = " + "'" + un.getText() + "' ;";
+									// System.out.println(str);
+									int src = dbConn.executeUpdate(str);
+									src = 0;
+									str = null;
+								}
 
+								if (!us.getText().equals("")) {
+									String str = "update USER_TABLE SET USER_MAIL = '" + us.getText()
+											+ "' WHERE USER_NAME = " + "'" + un.getText() + "';";
+									// System.out.println(str);
+									int src2 = dbConn.executeUpdate(str);
+									src2 = 0;
+									str = null;
+								}
+
+								if (!ub.getText().equals("")) {
+									String str = "update USER_TABLE SET USER_BIRTH = '" + ub.getText()
+											+ "' WHERE USER_NAME = " + "'" + un.getText() + "' ;";
+									int src1 = dbConn.executeUpdate(str);
+									src1 = 0;
+									str = null;
+								}
+
+							} else {
+								JOptionPane.showMessageDialog(null, un.getText() + "는 회원이 아닙니다.", "Message",
+										JOptionPane.ERROR_MESSAGE);
+							}
+							resultSetSrc.close();
+
+						}
+
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+				un.setText("");
+				ph.setText("");
+				ub.setText("");
+				us.setText("");
+			}
+		});
 		im.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dbConnector dbConn = new dbConnector();
@@ -272,6 +373,7 @@ public class Member_ctrl_form extends JFrame {
 						JOptionPane.showMessageDialog(null, "등록 : " + un.getText() + "이(는) 등록이 완료되었습니다.", "신규회원등록",
 								JOptionPane.NO_OPTION);
 					}
+					tmpConn.close();
 
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -280,7 +382,9 @@ public class Member_ctrl_form extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+
 			}
+
 		});
 
 		// 테이블의 행을 어떻게 추적해서 수정할건지 모르겠음
@@ -292,31 +396,30 @@ public class Member_ctrl_form extends JFrame {
 				String str = "select USER_RENT_CNT,USER_BOOL FROM USER_TABLE WHERE USER_NAME= " + "'" + un.getText()
 						+ "'" + ";";
 
-				try {
+				try {// 그냥 대여중인 책있으면 삭제불가능
 					ResultSet src = dbConn.executeQurey(str);
 
 					while (src.next()) {
 
 						String s = src.getString("USER_RENT_CNT");
-						lb.setText(src.getString("USER_RENT_CNT"));
 
+						if (s.equals("0")) {
+
+							String str2 = "update USER_TABLE SET USER_BOOL = 0 where USER_NAME= '" + un.getText()
+									+ "';";
+							int src2 = dbConn.executeUpdate(str2);
+						}
 						if (s.equals("1")) {
+
 							JOptionPane.showMessageDialog(null, "회원삭제불가능", "대여중인 도서가 있습니다.", JOptionPane.ERROR_MESSAGE);
 						}
-						
 
 					}
+					src.close();
 
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
-					System.out.print("e1 에러");
-				}
-				
-				if(lb.getText()=="0") {
 
-					String str2 = "update USER_TABLE SET USER_BOOL = 0 where USER_PHONE_NUMBER = '"
-							+ ph.getText() + "';";
-					int src2 = dbConn.executeUpdate(str2);
 				}
 
 			}
@@ -353,8 +456,50 @@ public class Member_ctrl_form extends JFrame {
 				JOptionPane.showMessageDialog(null, filePath, "당신이 선택된 파일은", JOptionPane.NO_OPTION);
 				ImageIcon icon = new ImageIcon(filePath);
 				img.setIcon(icon);
+				
+				
+				secondImg = img;	//이미지 복사
+				//이미지 새창으로 띄우기
+				JFrame showBookImgWindows = new JFrame();
+				showBookImgWindows.add(secondImg);
+				showBookImgWindows.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+						// TODO Auto-generated method stub
+						e.getWindow().dispose(); // 해당 창만 완전 종료함
+					}
+
+				});
+				showBookImgWindows.pack();
+				showBookImgWindows.setLocationRelativeTo(null); // 화면 정중앙 배치
+				showBookImgWindows.setVisible(true);
+
 			}
 		});
+		
+		/*
+		img.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				JFrame showBookImgWindows = new JFrame();
+				showBookImgWindows.add(img);
+				showBookImgWindows.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+						// TODO Auto-generated method stub
+						e.getWindow().dispose(); // 해당 창만 완전 종료함
+					}
+
+				});
+				showBookImgWindows.pack();
+				showBookImgWindows.setLocationRelativeTo(null); // 화면 정중앙 배치
+				showBookImgWindows.setVisible(true);
+				
+			}
+		});
+		*/
+
 
 	}
 
