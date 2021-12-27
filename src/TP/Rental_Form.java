@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import comm.dbConnector;
+import java.awt.Font;
 
 public class Rental_Form extends JFrame {
 
@@ -173,92 +174,108 @@ public class Rental_Form extends JFrame {
 		);
 
 		// 대여 완료
-		JButton returnCompleteButton = new JButton("\uB300\uC5EC\uC644\uB8CC");
-		returnCompleteButton.setBackground(SystemColor.activeCaption);
-		returnCompleteButton.setBounds(283, 328, 97, 23);
-		RENT_2.add(returnCompleteButton);
+		JButton RC = new JButton("\uB300\uC5EC\uC644\uB8CC");
+		RC.setBackground(SystemColor.activeCaption);
+		RC.setBounds(283, 328, 97, 23);
+		RENT_2.add(RC);
 
-		img.setBounds(219, 47, 161, 186);
+		img.setBounds(219, 39, 161, 186);
 		RENT_2.add(img);
 
 		JLabel cnt = new JLabel("");
-		JLabel aaa = new JLabel(""); 
+		JLabel aaa = new JLabel("");
 
 		cnt.setBounds(301, 332, 57, 15);
 		RENT_2.add(cnt);
-		returnCompleteButton.addActionListener(new ActionListener() {
+
+		JButton mc = new JButton("\uD68C\uC6D0\uD655\uC778");
+		mc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				String rentsql = "SELECT USER_BOOL FROM USER_TABLE WHERE USER_PHONE_NUMBER = " + "'" + tf.getText()
-						+ "'" + ";"; //유저 부울 값 확인 
+				String str = "select USER_BOOL FROM USER_TABLE WHERE USER_PHONE_NUMBER = " + "'"
+						+ tf2.getText() + "'" + ";";
 
-				String sql = "insert into RENT_TABLE(BOOK_ISBN,RENT_RETURN,USER_PHONE_NUMBER,RENT_DATE,RENT_RETURN_TIME) values(?,?,?,?,?)";
-				
-				String str2 = "select USER_RENT_CNT FROM USER_TABLE WHERE USER_PHONE_NUMBER= " + "'" + tf2.getText()
-						+ "'" + ";";
+				try {
+					ResultSet src = dbConn.executeQurey(str);
+					while (src.next()) {
+						String c = src.getString("USER_BOOL");
+						if (c.equals("1")) {
+							//현재 회원임
+							JOptionPane.showMessageDialog(null, "회원입니다.", "도서대출", JOptionPane.ERROR_MESSAGE);
+							RC.setVisible(true);
+						}
+						if (c.equals("0")) {
+							//탈퇴된 회원임
+							JOptionPane.showMessageDialog(null, "회원이아닙니다.", "도서대출", JOptionPane.ERROR_MESSAGE);
+							RC.setVisible(false);
+						}
+					}
+				} catch (Exception e345) {
+
+				}
+
+			}
+		});
+		mc.setBackground(SystemColor.activeCaption);
+		mc.setFont(new Font("휴먼고딕", Font.PLAIN, 12));
+		mc.setBounds(91, 214, 97, 23);
+		RENT_2.add(mc);
+		RC.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// 회원테이블에서 부울값가져오려면
+				String rentsql = "SELECT USER_BOOL,USER_RENT_CNT FROM USER_TABLE WHERE USER_PHONE_NUMBER = " + "'"
+						+ tf.getText() + "'" + ";"; //
+				// SQL 에서 현재 시각을 아는 함수 now() 함수를 사용하여 대여 시간을 구했고, date_add(now(), interval 14 day)를 이용해 현재 시각에서 14일을 더한 값을 반납날짜로 지정함.
+				String sql = "insert into RENT_TABLE(BOOK_ISBN,RENT_RETURN,USER_PHONE_NUMBER,RENT_DATE,RENT_RETURN_TIME) values(?,?,?,now(),date_add(now(), interval 14 day))";
+
+				// 책대여권수는 user table 폰넘버로 구별하도록하고
 
 				Connection tmpConn = dbConn.getConnection();
 
-				ResultSet src = dbConn.executeQurey(str2);
-
-				ResultSet rentsrc = dbConn.executeQurey(rentsql);
+				ResultSet src = dbConn.executeQurey(rentsql);// 유저 부울 값 가져옴
 
 				try {
-					while (src.next()) {
+					while (src.next()) {// 책대여권수
 						cnt.setText(src.getString("USER_RENT_CNT"));
-
+						aaa.setText(src.getString("USER_BOOL"));
 					}
 				} catch (Exception e2) {
 
 				}
-
-				try {
-					while (rentsrc.next()) {
-						aaa.setText(src.getString("USER_BOOL"));
-					}
-				} catch (Exception e3) {
-
-				}
-				if (aaa.getText().equals("1")) { // 부울값이 0이 아니면
-
+				try {// 대여권수가 1이거나 탈퇴된회원 ( 부울값=0) 일때 대출실패로 ㄱ
 					if (cnt.getText().equals("1")) {
-						JOptionPane.showMessageDialog(null, "대출실패", "책은 1권씩만 빌릴수있습니다.", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "대출실패", "회원님은 탈퇴되었거나 아직 대여중입니다.",
+								JOptionPane.ERROR_MESSAGE);
 					} else {
-						try {
-							PreparedStatement ps = tmpConn.prepareStatement(sql);
+						PreparedStatement ps = tmpConn.prepareStatement(sql);
+						// ps.setString(1, ISBN_TF.getText());
+						ps.setString(1, tf.getText());// isbn
+						ps.setString(2, "0");
+						ps.setString(3, tf2.getText());
 
-							// ps.setString(1, ISBN_TF.getText());
-							ps.setString(1, tf.getText());// isbn
-							ps.setString(2, "0");
-							ps.setString(3, tf2.getText());
-							ps.setString(4, "2020:02:10");
-							ps.setString(5, "2020:02:10");
 
-							int count = ps.executeUpdate();
-							if (count == 0) {
-								JOptionPane.showMessageDialog(null, "대출실패", "도서대출", JOptionPane.ERROR_MESSAGE);
-							} else {
-								JOptionPane.showMessageDialog(null, "대출되었습니다.", "도서반납", JOptionPane.NO_OPTION);
-							}
-
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+						int count = ps.executeUpdate();
+						if (count == 0) {
+							JOptionPane.showMessageDialog(null, "대출실패", "도서대출", JOptionPane.ERROR_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null, "대출되었습니다.", "도서반납", JOptionPane.NO_OPTION);
 						}
-
-						String str3 = "UPDATE BOOK_TABLE SET BOOK_PRE = 0 where BOOK_ISBN = '" + tf.getText() + "' ;";
-
-						int src3 = dbConn.executeUpdate(str3);
-
-						String str4 = "UPDATE USER_TABLE SET USER_RENT_CNT = 1 where USER_PHONE_NUMBER = '"
-								+ tf2.getText() + "' ;";
-
-						int src4 = dbConn.executeUpdate(str4);
-
 					}
-				} else {
-					JOptionPane.showMessageDialog(null, "삭제된회원", "대출실패", JOptionPane.ERROR_MESSAGE);
+
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+
+				String str3 = "UPDATE BOOK_TABLE SET BOOK_PRE = 0 where BOOK_ISBN = '" + tf.getText() + "' ;";
+
+				int src3 = dbConn.executeUpdate(str3);
+
+				String str4 = "UPDATE USER_TABLE SET USER_RENT_CNT =  USER_RENT_CNT + 1 where USER_PHONE_NUMBER = '" + tf2.getText()
+						+ "' ;";
+
+				int src4 = dbConn.executeUpdate(str4);
+
 			}
 		});
 	}
