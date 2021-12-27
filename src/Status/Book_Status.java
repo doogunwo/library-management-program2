@@ -39,9 +39,11 @@ public class Book_Status extends JFrame {
 				String liveState;
 				
 				if(src.getInt(7) == 1) {
-					liveState = "보유";
+					liveState = "대여가능";
+				}else if(src.getInt(7) == 0){
+					liveState = "대여중";
 				}else {
-					liveState = "미보유";
+					liveState = "미등록 도서";							
 				}
 				
 				// ResultSet같은 경우 Index 1번부터 시작
@@ -71,7 +73,7 @@ public class Book_Status extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				// 이벤트 처리를 위한 table 관련 객제 정보 받기
 				JTable sourceTable = (JTable) e.getSource();
-				DefaultTableModel sourceModel = (DefaultTableModel) sourceTable.getModel();
+				
 
 				// 클릭한 행 및 컬럼 위치 확보
 				int clickedTableRow = sourceTable.getSelectedRow(); // 행
