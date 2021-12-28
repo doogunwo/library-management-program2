@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,6 +51,7 @@ public class book_form extends JFrame {
 	private JTextField Price_TF;
 	private JTextField Pub_TF;
 	dbConnector dbConn = new dbConnector();
+	JLabel secondImg = new JLabel();	//이미지를 옮길 레이블
 
 	/**
 	 * Launch the application.
@@ -193,6 +196,24 @@ public class book_form extends JFrame {
 				JOptionPane.showMessageDialog(null, filePath, "당신이 선택된 파일은", JOptionPane.NO_OPTION);
 				ImageIcon icon = new ImageIcon(filePath);
 				man.setIcon(icon);
+				
+				secondImg = man;
+				
+				//이미지 새창으로 띄우기
+				JFrame showBookImgWindows = new JFrame();
+				showBookImgWindows.add(secondImg);
+				showBookImgWindows.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+						// TODO Auto-generated method stub
+						e.getWindow().dispose(); // 해당 창만 완전 종료함
+					}
+
+				});
+				showBookImgWindows.pack();
+				showBookImgWindows.setLocationRelativeTo(null); // 화면 정중앙 배치
+				showBookImgWindows.setVisible(true);
 
 			}
 		});
@@ -239,9 +260,34 @@ public class book_form extends JFrame {
 						Autior_TF.setText(src.getString("BOOK_AUTHIR"));
 						Pub_TF.setText(src.getString("BOOK_PUB"));
 						Price_TF.setText(src.getString("BOOK_PRICE"));
+						
+						try {
+							InputStream img2 = src.getBinaryStream("BOOK_IMAGE");
+							man.setIcon(new ImageIcon(ImageIO.read(img2)));
+							
+							secondImg = man;
+						} catch (Exception e3) {
+
+						}
 					}
 				} catch (Exception e1) {
 				}
+				
+				//이미지 새창으로 띄우기
+				JFrame showBookImgWindows = new JFrame();
+				showBookImgWindows.add(secondImg);
+				showBookImgWindows.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+						// TODO Auto-generated method stub
+						e.getWindow().dispose(); // 해당 창만 완전 종료함
+					}
+
+				});
+				showBookImgWindows.pack();
+				showBookImgWindows.setLocationRelativeTo(null); // 화면 정중앙 배치
+				showBookImgWindows.setVisible(true);
 			}
 		});
 
